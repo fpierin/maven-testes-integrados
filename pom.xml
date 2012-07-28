@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>br.com.felipepierin</groupId>
+	<artifactId>maven-testes-integrados</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>maven-testes-integrados</name>
+	<url>http://oreboladodeturing.wordpress.com</url>
+
+	<properties>
+
+		<!-- Propriedades de compatibilidade do sistema -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.compability.version>1.6</java.compability.version>
+
+		<maven.build.helper.plugin.version>1.7</maven.build.helper.plugin.version>
+		<maven.compiler.plugin.version>2.5.1</maven.compiler.plugin.version>
+		<maven.surefire.plugin.version>2.12</maven.surefire.plugin.version>
+		<maven.failsafe.plugin.version>2.12</maven.failsafe.plugin.version>
+
+		<integration.test.source.dir>${basedir}/src/integration-test/java</integration.test.source.dir>
+		<junit.version>4.10</junit.version>
+
+	</properties>
+
+	<build>
+		<plugins>
+
+			<!-- Configurações de compatibilidade do sistema -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.plugin.version}</version>
+				<configuration>
+					<compilerVersion>${java.compability.version}</compilerVersion>
+					<source>${java.compability.version}</source>
+					<target>${java.compability.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+
+			<!-- Adição de novas pastas ao build_path da aplicação -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${maven.build.helper.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<phase>process-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${integration.test.source.dir}</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Configuração de testes unitários -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.surefire.plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>${maven.surefire.plugin.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<includes>
+						<include>**/*.class</include>
+					</includes>
+					<excludedGroups>com.wordpress.oreboladodeturing.testescommaven.util.TesteDeIntegracao</excludedGroups>
+				</configuration>
+			</plugin>
+
+			<!-- Configuração de testes integrados -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven.failsafe.plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>${maven.failsafe.plugin.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<includes>
+						<includes>**/*.class</includes>
+					</includes>
+					<groups>com.wordpress.oreboladodeturing.testescommaven.util.TesteDeIntegracao</groups>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<artifactId>junit</artifactId>
+			<groupId>junit</groupId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>
